@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">SavourCoach</string>
+    <string name="settings">Settings</string>
+    <string name="title_mindful_monents">The Mindful Moments</string>
+
+    <string name="take_a_breathe">Focused breathing can be powerfully transformative. It allows the
+        nervous system to settle, the mind and body to calm and harmony to be restored.
+        This short mindful moment is perfect for when you feel stressed, need time to clarify your thoughts or just need a break from the rat race.
+</string>
+
+    <string name="whats_really_eating_you">
+        This is a technique for self-realisation.
+        By learning to watch, pay attention and react to our thoughts as they come and go during this practice,
+        you can gain deeper insight what is really eating you, is it hunger or are you just thirsty, tired, anxious, stressed or plain bored? This practice can also help you take your thoughts less personally, and not automatically believe them. Additionally, this meditation can offer insight into any habitual eating patterns and your old related reactions.
+</string>
+
+    <string name="your_locus_of_control">
+      Our past hurt and emotional triggers have a way of keeping us stuck in our tracks.
+        Practicing letting it these feelings go helps us move forward. There are certain things within our control, our thoughts, feelings, behaviours and actions; outside of this we have little control over our world. Having an appreciation for what we can control allows us to be more mindful with our food choices and what to do when we feel we are losing control over our eating behaviours.
+</string>
+
+    <string name="mindful_eating">
+     Our eating behaviours exhibit our greatest degree of unconsciousness where we eat and do other activities such as watching television, talking, working or driving. The feeling of being full takes a little while to come to our attention, and during this time we may still be loading our stomachs with more food, unaware that we are already full. By eating slower and bringing awareness to our body during the process, we may eat quite a bit less food.
+</string>
+
+    <string name="i_am_ok">
+        This technique has the potential to enhance your feelings of unconditional love towards other people and yourself. It aims to reduce feelings of judgment and condemnation, and increases the sense of compassion and connection. Recognising that we are human and should we stumble along this journey, self-compassion can get us back on track as opposed to throwing the towel in.
+</string>
+
+ <string name="savour_your_breath">
+      Stress is an extremely unhealthy condition causing the body to release the chemical cortisol, which has been shown, amongst other things, to reduce brain and organ function. Importantly for us, a behaviour exhibited when stressed is to emotionally eat; if we can reduce our stress levels then we can help to control any emotional eating tendencies.</string>
+
+    <string name="the_hunger_awareness_body_scan">
+    The body scan is designed to help you bring awareness to the myriad of sensations that occur throughout your body. By practicing this mindful moment regularly, you can become more in tune with your body’s signals and what it is trying to tell you… are you hungry or just tired? Maybe you are stressed? More options are available to you when you recognise your body signals, instead of mindlessly eating we can do what our body requires, be it movement or just having a glass of water to quench a thirst.
+    </string>
+
+    <string-array name="moments_array">
+        <item>The hunger awareness body scan</item>
+        <item>Savour your breath</item>
+        <item>I am ok</item>
+        <item>Mindful eating</item>
+        <item>Your locus of control</item>
+        <item>What\'s really eating you?</item>
+        <item>Take a breath.</item>
+    </string-array>
+</resources>
