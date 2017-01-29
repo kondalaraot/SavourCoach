@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 
 public class PreferenceManager {
 
+    private static final String KEY_BREATHE_DURATION = "key_breathe_duration";
     private static final String KEY_BREATHE_IN = "key_breathe_in";
     private static final String KEY_BREATHE_IN_HOLD = "key_breathe_in_hold";
     private static final String KEY_BREATHE_OUT = "key_breathe_out";
@@ -70,6 +71,9 @@ public class PreferenceManager {
         mEditor.putString(KEY_REMINDER_TIME, remindTime).commit();
 
     }
+    public void setDuration(int duration) {
+        mEditor.putInt(KEY_BREATHE_DURATION, duration).commit();
+    }
 
 
     /*public String getAuthToken() {
@@ -78,6 +82,9 @@ public class PreferenceManager {
     }*/
     public int getBreatheIn() {
         return mPreferences.getInt(KEY_BREATHE_IN, 2);
+    }
+    public int getBreatheDuration() {
+        return mPreferences.getInt(KEY_BREATHE_DURATION, 1);
     }
 
     public int getBreatheInHold() {
@@ -99,6 +106,7 @@ public class PreferenceManager {
     public String getReminderTime() {
         return mPreferences.getString(KEY_REMINDER_TIME, "12:00");
     }
+
 
 
    /* *//**

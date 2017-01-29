@@ -8,5 +8,6 @@ public class Constans {
 
     public static final int BREATHE_SEEK_MAX = 30;
     public static final int BREATHE_SEEK_DEFAULT = 2;
+    public static final int BREATHE_SEEK_DURATION_DEFAULT = 1;
     public static final int BREATHE_SEEK_HOLD_DEFAULT = 0;
 }

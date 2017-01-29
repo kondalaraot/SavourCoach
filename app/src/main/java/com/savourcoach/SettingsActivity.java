@@ -24,8 +24,10 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 
-public class SettingsActivity extends AppCompatActivity implements OnCompleteListener, SeekBar.OnSeekBarChangeListener {
+public class SettingsActivity extends AppCompatActivity implements OnCompleteListener, SeekBar.OnSeekBarChangeListener,View.OnClickListener {
 
+    private SeekBar mSeekBarDuration;
+    private TextView mTvDurationValue;
     private SeekBar mSeekBarBreatheIn;
     private TextView mTvBreatheInValue;
     private SeekBar mSeekBarBreatheInHold;
@@ -36,6 +38,10 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
     private TextView mTvBreatheOutHoldValue;
     private SwitchCompat mSwitchCompat;
     private TextView mTvTime;
+
+    private TextView mTvMealTimer;
+    private TextView mTvDisclaimer;
+    private TextView mTvAbout;
 
     PreferenceManager mPreferenceManager;
     AlarmManager alarmManager;
@@ -51,7 +57,9 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
 
     private void findViews() {
 
+        mSeekBarDuration = (SeekBar) findViewById(R.id.seekBarDuration);
         mSeekBarBreatheIn = (SeekBar) findViewById(R.id.seekBarBreatheIn);
+        mTvDurationValue = (TextView) findViewById(R.id.tv_duration_value);
         mTvBreatheInValue = (TextView) findViewById(R.id.tv_breathe_in_value);
         mSeekBarBreatheInHold = (SeekBar) findViewById(R.id.seekBarBreatheInHold);
         mTvBreatheInHoldValue = (TextView) findViewById(R.id.tv_breathe_in_hold_value);
@@ -62,6 +70,14 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
         mSwitchCompat = (SwitchCompat) findViewById(R.id.switch_compat);
         mTvTime = (TextView) findViewById(R.id.tv_time);
 
+        mTvMealTimer = (TextView) findViewById(R.id.tv_meal_timer);
+        mTvDisclaimer = (TextView) findViewById(R.id.tv_disclaimer);
+        mTvAbout = (TextView) findViewById(R.id.tv_about);
+
+        mTvMealTimer.setOnClickListener(this);
+        mTvDisclaimer.setOnClickListener(this);
+        mTvAbout.setOnClickListener(this);
+
         if (mPreferenceManager.isReminderOn()){
             mSwitchCompat.setChecked(true);
         }else {
@@ -70,6 +86,10 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
         }
 
         mTvTime.setText(mPreferenceManager.getReminderTime());
+
+        mSeekBarDuration.setMax(Constans.BREATHE_SEEK_MAX);
+        mSeekBarDuration.setProgress(mPreferenceManager.getBreatheDuration());
+        mTvDurationValue.setText(" " + mPreferenceManager.getBreatheDuration() + "m");
 
         mSeekBarBreatheIn.setMax(Constans.BREATHE_SEEK_MAX);
         mSeekBarBreatheIn.setProgress(mPreferenceManager.getBreatheIn());
@@ -89,6 +109,7 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
         mSeekBarBreatheOutHold.setProgress(mPreferenceManager.getBreatheOutHold());
         mTvBreatheOutHoldValue.setText(" " + mPreferenceManager.getBreatheOutHold() + "s");
 
+        mSeekBarDuration.setOnSeekBarChangeListener(this);
         mSeekBarBreatheIn.setOnSeekBarChangeListener(this);
         mSeekBarBreatheInHold.setOnSeekBarChangeListener(this);
         mSeekBarBreatheOut.setOnSeekBarChangeListener(this);
@@ -213,6 +234,18 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
             mTvBreatheOutHoldValue.setText("  " + i + "s");
             mPreferenceManager.setBreatheOutHoldDur(i);
 
+        }else if (seekBar == mSeekBarDuration) {
+
+            if (i <= Constans.BREATHE_SEEK_DEFAULT) {
+                seekBar.setProgress(2);
+                mTvDurationValue.setText("  " + Constans.BREATHE_SEEK_DURATION_DEFAULT + "m");
+                mPreferenceManager.setDuration(Constans.BREATHE_SEEK_DURATION_DEFAULT);
+            } else {
+                mTvDurationValue.setText("  " + i + "m");
+                mPreferenceManager.setDuration(i);
+
+            }
+
         }
     }
 
@@ -223,6 +256,21 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        if(view == mTvMealTimer){
+            startActivity(new Intent(this,MealTimerActivity.class));
+        }else if (view == mTvDisclaimer){
+            startActivity(new Intent(this,DisclaimerActivity.class));
+
+        }else if (view == mTvAbout){
+            startActivity(new Intent(this,AboutActivity.class));
+
+        }
 
     }
 

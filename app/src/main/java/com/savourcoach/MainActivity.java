@@ -1,14 +1,15 @@
 package com.savourcoach;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,9 +21,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final int ZOOM_OUT_HOLD_LENGTH = 2000;
 
     private ImageView mImageView;
-    private Button mBtnStartStop;
-    private Button mBtnSettings;
-    private Button mBtnMindfulMom;
+    private ImageView mBtnStartStop;
+    private ImageView mBtnSettings;
+    private ImageView mBtnMindfulMom;
     private TextView mTvlabel;
 
     PreferenceManager mPreferenceManager;
@@ -51,9 +52,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void findViews() {
         mImageView = (ImageView)findViewById( R.id.imageView );
         mTvlabel = (TextView)findViewById( R.id.tv_breathe_label );
-        mBtnStartStop = (Button)findViewById( R.id.btn_start_stop );
-        mBtnSettings = (Button)findViewById( R.id.btn_settings );
-        mBtnMindfulMom = (Button)findViewById( R.id.btn_mindful_mom );
+        mBtnStartStop = (ImageView) findViewById( R.id.btn_start_stop );
+        mBtnSettings = (ImageView) findViewById( R.id.btn_settings );
+        mBtnMindfulMom = (ImageView) findViewById( R.id.btn_mindful_mom );
 
         mBtnStartStop.setOnClickListener( this );
         mBtnSettings.setOnClickListener( this );
@@ -71,21 +72,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if ( v == mBtnStartStop ) {
             // Handle clicks for mBtnStartStop
-            if(mBtnStartStop.getText().toString().equalsIgnoreCase("Start")){
-                mBtnStartStop.setText("Stop");
+//            if(mBtnStartStop.getText().toString().equalsIgnoreCase("Start")){
+            //Animation has not started
+            if(!(zoomin.hasStarted() || zoomout.hasStarted())){
+
+//                mBtnStartStop.setText("Stop");
 //                zoomin.start();
 //                zoomout.start();
                 mImageView.setAnimation(zoomout);
                 zoomout.setAnimationListener(new ZoomOutAnimationListener());
                 zoomin.setAnimationListener(new ZoomInAnimationListener());
                 mImageView.startAnimation(zoomout);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        // Show your dialog here
+                        zoomout.cancel();
+                        zoomin.cancel();
+                        zoomout.setAnimationListener(null);
+                        zoomin.setAnimationListener(null);
+//                mImageView.getAnimation().setAnimationListener(null);
+                        mImageView.clearAnimation();
+                        showAlert();
+                    }
+                }, 1000 * 60 * mPreferenceManager.getBreatheDuration());
 //                mImageView.setAnimation(zoomin);
 
             }else{
-                mBtnStartStop.setText("Start");
+//                mBtnStartStop.setText("Start");
                 /*zoomout.cancel();
                 zoomin.cancel();*/
-                mTvlabel.setText("");
+//                mTvlabel.setText("");
                 zoomout.cancel();
                 zoomin.cancel();
                 zoomout.setAnimationListener(null);
@@ -103,6 +121,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // Handle clicks for mBtnSettings
             startActivity(new Intent(this,MindfulMomeListActivity.class));
         }
+    }
+
+    private void showAlert() {
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
+
+        // set title
+        alertDialogBuilder.setTitle("Savour Coach");
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage("Time over!")
+                .setCancelable(false)
+                .setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, close
+                        // current activity
+                        dialog.dismiss();
+                    }
+                });
+              /* *//* .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+                        dialog.cancel();
+                    }*//*
+                });*/
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
     }
 
     private class ZoomInAnimationListener implements Animation.AnimationListener{
