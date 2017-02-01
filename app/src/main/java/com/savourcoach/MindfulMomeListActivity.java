@@ -19,11 +19,15 @@ import android.widget.Toast;
 import com.android.vending.billing.IInAppBillingService;
 import com.savourcoach.util.IabBroadcastReceiver;
 import com.savourcoach.util.IabHelper;
+import com.savourcoach.util.IabResult;
+import com.savourcoach.util.Inventory;
+import com.savourcoach.util.SkuDetails;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MindfulMomeListActivity extends AppCompatActivity  {
 
@@ -37,7 +41,7 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
     IabBroadcastReceiver mBroadcastReceiver;
     IInAppBillingService mService;
     ServiceConnection mConnection;
-    String inappid = "android.test.purchased";
+//    String inappid = "android.test.purchased";
 
 
     @Override
@@ -94,6 +98,28 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
                 "Qbh9kCv42RxtJs2W6+Tb8aivYV6Web3ndhJPNCdphWFw5vbU0h6DE9TzEXxgDx6yzO82SFOcLsijIV4BGq3c" +
                 "1wMdjdtvjMXyV0euf6lx6aVNsD1KWJtHyKs1nbIPK7IwxNr+8F7zTqcxOI7WQqdN/7cXKGPKcTMlyKBlbf" +
                 "CEMhEsJO2C8VdgnGyi92Rx8u/elgNsj8Le6c9joaZHa0k3ZOKhlMw4ImfkbIHkZhKIhj0OWsKH3IMQIDAQAB";
+
+        mHelper = new IabHelper(this, base64EncodedPublicKey);
+
+        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+                                       public void onIabSetupFinished(IabResult result) {
+                                           if (!result.isSuccess()) {
+                                               Log.d(TAG, "In-app Billing setup failed: " +
+                                                       result);
+                                           } else {
+                                               Log.d(TAG, "In-app Billing is set up OK");
+                                               List<String> identifiers = new ArrayList<String> ();
+                                               identifiers.add("mindful_eating");
+
+                                               try {
+                                                   mHelper.queryInventoryAsync(true, identifiers,null,mQueryFinishedListener);
+                                               } catch (IabHelper.IabAsyncInProgressException e) {
+                                                   e.printStackTrace();
+                                               }
+                                           }
+                                       }
+                                   });
+
 
 
 
@@ -204,9 +230,9 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
     @Override
     public void onDestroy() {
         super.onDestroy();
-       /* if (mService != null) {
+        if (mConnection != null) {
             unbindService(mConnection);
-        }*/
+        }
     }
 
     void complain(String message) {
@@ -231,7 +257,7 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
                 System.out.println("re ssuut ood");
                 try{
                     JSONObject jo = new  JSONObject(purchaseData);
-                    String sku = jo.getString(inappid);
+                    String sku = jo.getString("");
                     Toast.makeText(MindfulMomeListActivity.this,
                             "u have bo ught"+ sku,
                             Toast.LENGTH_LONG).show();
@@ -242,4 +268,27 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
             }
         }
     }
+
+    IabHelper.QueryInventoryFinishedListener mQueryFinishedListener = new IabHelper.QueryInventoryFinishedListener() {
+        public void onQueryInventoryFinished(IabResult result, Inventory inventory)
+        {
+            if (result.isFailure()) {
+                Log.d(TAG,"getProducts failed");
+//                callback.failure(null);
+            } else {
+                Log.d(TAG,"getProducts succeeded");
+                SkuDetails skuDetails = inventory.getSkuDetails("mindful_eating");
+                List<String> skus = inventory.getAllOwnedSkus();
+
+                if(skuDetails !=null){
+                    String descr = skuDetails.getDescription();
+                    String price = skuDetails.getPrice();
+                    Log.d(TAG,"Descr "+descr +"Price" + price);
+                }
+
+
+//                callback.success(inventory);
+            }
+        }
+    };
 }
