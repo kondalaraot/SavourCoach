@@ -19,6 +19,7 @@ public class AboutActivity extends AppCompatActivity {
         mTextView = (TextView) findViewById(R.id.tv_descreption);
 
         playVideo();
+        mTextView.setText(getResources().getString(R.string.about));
     }
 
     private void playVideo(){

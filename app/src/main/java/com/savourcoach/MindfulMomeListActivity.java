@@ -1,12 +1,10 @@
 package com.savourcoach;
 
 import android.app.AlertDialog;
-import android.content.ComponentName;
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -42,14 +40,21 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
     IInAppBillingService mService;
     ServiceConnection mConnection;
 //    String inappid = "android.test.purchased";
+    static final String SKU_ITEM_MIND_FUL_EATING ="mindful_eating";
+    static final String SKU_ITEM_SAVOUR_BREATHE ="savour_your_breathe";
+    static final String SKU_ITEM_I_AM_OK ="i_am_ok";
+    static final String SKU_ITEM_HUNGER_BODY_SCAN ="hunger_awareness_body_scan";
+    static final String SKU_ITEM_YOUR_LOCUS_OF_CONTROL ="your_locus_of_control?";
+    static final String SKU_ITEM_WHAT_IS_REALLY_EATING_YOU ="what_is_really_eating_you?";
 
+     ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mindful_mome_list);
 
-        ServiceConnection mServiceConn = new ServiceConnection() {
+   /*     ServiceConnection mServiceConn = new ServiceConnection() {
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 mService = null;
@@ -80,7 +85,7 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
         Intent serviceIntent =
                 new Intent("com.android.vending.billing.InAppBillingService.BIND");
         serviceIntent.setPackage("com.android.vending");
-        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);*/
 
          /* base64EncodedPublicKey should be YOUR APPLICATION'S PUBLIC KEY
          * (that you got from the Google Play developer console). This is not your
@@ -100,6 +105,7 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
                 "CEMhEsJO2C8VdgnGyi92Rx8u/elgNsj8Le6c9joaZHa0k3ZOKhlMw4ImfkbIHkZhKIhj0OWsKH3IMQIDAQAB";
 
         mHelper = new IabHelper(this, base64EncodedPublicKey);
+        mHelper.enableDebugLogging(true);
 
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
                                        public void onIabSetupFinished(IabResult result) {
@@ -109,10 +115,16 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
                                            } else {
                                                Log.d(TAG, "In-app Billing is set up OK");
                                                List<String> identifiers = new ArrayList<String> ();
-                                               identifiers.add("mindful_eating");
+                                               identifiers.add(SKU_ITEM_MIND_FUL_EATING);
+                                               identifiers.add(SKU_ITEM_SAVOUR_BREATHE);
+                                               identifiers.add(SKU_ITEM_I_AM_OK);
+                                               identifiers.add(SKU_ITEM_HUNGER_BODY_SCAN);
+                                               identifiers.add(SKU_ITEM_YOUR_LOCUS_OF_CONTROL);
+                                               identifiers.add(SKU_ITEM_WHAT_IS_REALLY_EATING_YOU);
 
                                                try {
-                                                   mHelper.queryInventoryAsync(true, identifiers,null,mQueryFinishedListener);
+                                                   mProgressDialog = ProgressDialog.show(MindfulMomeListActivity.this,"Please wait","Please wait Loading...");
+                                                   mHelper.queryInventoryAsync(true, identifiers,mQueryFinishedListener);
                                                } catch (IabHelper.IabAsyncInProgressException e) {
                                                    e.printStackTrace();
                                                }
@@ -272,17 +284,24 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
     IabHelper.QueryInventoryFinishedListener mQueryFinishedListener = new IabHelper.QueryInventoryFinishedListener() {
         public void onQueryInventoryFinished(IabResult result, Inventory inventory)
         {
+            mProgressDialog.dismiss();
             if (result.isFailure()) {
                 Log.d(TAG,"getProducts failed");
 //                callback.failure(null);
             } else {
                 Log.d(TAG,"getProducts succeeded");
-                SkuDetails skuDetails = inventory.getSkuDetails("mindful_eating");
+                SkuDetails skuDetails_mindful_eating = inventory.getSkuDetails(SKU_ITEM_MIND_FUL_EATING);
+                SkuDetails skuDetails_item_savour_breathe = inventory.getSkuDetails(SKU_ITEM_SAVOUR_BREATHE);
+                SkuDetails skuDetails_i_am_ok = inventory.getSkuDetails(SKU_ITEM_I_AM_OK);
+                SkuDetails skuDetails_hunger_bodyScan = inventory.getSkuDetails(SKU_ITEM_HUNGER_BODY_SCAN);
+                SkuDetails skuDetails_locus_of_control = inventory.getSkuDetails(SKU_ITEM_YOUR_LOCUS_OF_CONTROL);
+                SkuDetails skuDetails_really_eating_you = inventory.getSkuDetails(SKU_ITEM_WHAT_IS_REALLY_EATING_YOU);
+
                 List<String> skus = inventory.getAllOwnedSkus();
 
-                if(skuDetails !=null){
-                    String descr = skuDetails.getDescription();
-                    String price = skuDetails.getPrice();
+                if(skuDetails_mindful_eating !=null){
+                    String descr = skuDetails_mindful_eating.getDescription();
+                    String price = skuDetails_mindful_eating.getPrice();
                     Log.d(TAG,"Descr "+descr +"Price" + price);
                 }
 

@@ -16,7 +16,7 @@ public class MealTimerActivity extends AppCompatActivity implements View.OnClick
     private TextView mTvDescreption;
     private TextView mTvTimer;
     MediaPlayer mPlayer;
-    int mAudioResource;
+//    int mAudioResource;
     CountDownTimer mCountDownTimer;
 
     @Override
@@ -33,8 +33,8 @@ public class MealTimerActivity extends AppCompatActivity implements View.OnClick
         mTvDescreption = (TextView)findViewById( R.id.tv_descreption );
         mTvTimer = (TextView)findViewById( R.id.tv_timer );
         mBtnStartStop.setOnClickListener( this );
-        mAudioResource = R.raw.seven;
-        mTvDescreption.setText(getResources().getString(R.string.take_a_breathe));
+//        mAudioResource = R.raw.seven;
+        mTvDescreption.setText(getResources().getString(R.string.meal_timer_descr));
     }
 
     @Override
@@ -62,11 +62,17 @@ public class MealTimerActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         if ( v == mBtnStartStop ) {
             // Handle clicks for mBtnStartStop
-            if(mPlayer!=null && mPlayer.isPlaying()){
+            if(isTimerRunning){
                 mBtnStartStop.setImageResource(R.drawable.ic_media_play);
-//                mCountDownTimer.cancel();
-                stopAudioFile();
+                if(mCountDownTimer !=null){
+                    mCountDownTimer.cancel();
+//                stopAudioFile();
+                    mCountDownTimer.cancel();
+                    mTvTimer.setText("00:00");
+                }
+
             }else{
+
                 mBtnStartStop.setImageResource(R.drawable.ic_media_stop);
                 playAudioFile();
 
@@ -74,11 +80,12 @@ public class MealTimerActivity extends AppCompatActivity implements View.OnClick
 //            playAudioFile();
         }
     }
-
+boolean isTimerRunning = false;
     private void playAudioFile() {
-        mPlayer = MediaPlayer.create(this, mAudioResource);
-        mPlayer.start();
-        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        isTimerRunning = true;
+//        mPlayer = MediaPlayer.create(this, mAudioResource);
+//        mPlayer.start();
+       /* mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -86,8 +93,9 @@ public class MealTimerActivity extends AppCompatActivity implements View.OnClick
                 mp.release();
             }
 
-        });
-        int duration = mPlayer.getDuration();
+        });*/
+//        int duration = mPlayer.getDuration();
+        int duration = 20 * 60 * 1000; //20 Mins
         mCountDownTimer =new CountDownTimer(duration, 1000) {
 
             public void onTick(long millisUntilFinished) {
@@ -105,6 +113,7 @@ public class MealTimerActivity extends AppCompatActivity implements View.OnClick
             }
 
             public void onFinish() {
+                isTimerRunning = false;
                 mTvTimer.setText("00:00");
             }
 
@@ -112,7 +121,7 @@ public class MealTimerActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    private void stopAudioFile(){
+   /* private void stopAudioFile(){
         if(mPlayer!=null ){
             if(mPlayer.isPlaying()){
                 mPlayer.stop();
@@ -122,5 +131,5 @@ public class MealTimerActivity extends AppCompatActivity implements View.OnClick
             }
         }
 
-    }
+    }*/
 }

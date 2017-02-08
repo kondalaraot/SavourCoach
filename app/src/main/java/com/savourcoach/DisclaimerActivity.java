@@ -11,6 +11,6 @@ public class DisclaimerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_disclaimer);
         TextView tv = (TextView) findViewById(R.id.tv_disclaimer);
-        tv.setText(R.string.i_am_ok);
+        tv.setText(R.string.disclaimer);
     }
 }

@@ -34,6 +34,22 @@
     The body scan is designed to help you bring awareness to the myriad of sensations that occur throughout your body. By practicing this mindful moment regularly, you can become more in tune with your body’s signals and what it is trying to tell you… are you hungry or just tired? Maybe you are stressed? More options are available to you when you recognise your body signals, instead of mindlessly eating we can do what our body requires, be it movement or just having a glass of water to quench a thirst.
     </string>
 
+    <string name="meal_timer_descr">
+       This timer is designed give you a full 20 minutes to enjoy your meal allowing your stomach to send the signals of fullness to your brain. Use it to slow yourself down, switch off all distractions such as the TV to savour the moment and enjoyment of eating.
+    </string>
+
+    <string name="about">
+The application is intended to be utilised in conjunction with the 6 week mindful eating programme run exclusively by the Savour Coach. To find out how you can get involved or learn more find the Savour Coach on Twitter at mindful eating@TheSavourCoach or contact the Savour Coach HQ at thesavourcoach@outlook.com.    </string>
+
+    <string name="disclaimer">
+        PLEASE READ \n
+The resources on this application are provided for informational purposes only, and should not be used to replace the specialised training and professional judgment of a health care or mental health care professional.
+
+The Savour Coach cannot be held responsible for the use of the information provided. Please always consult a trained mental health professional before making any decision regarding treatment of yourself or others.
+
+Use of this application should be designated to times when you are not engaged in activities that may distract your attention such as driving, operating machinery or other pursuits that may be hazardous to yourself or others.
+    </string>
+
     <string-array name="moments_array">
         <item>The hunger awareness body scan</item>
         <item>Savour your breath</item>

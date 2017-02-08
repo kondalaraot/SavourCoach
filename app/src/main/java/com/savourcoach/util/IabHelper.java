@@ -716,7 +716,7 @@ public class IabHelper {
         })).start();
     }
 
-    public void queryInventoryAsync(QueryInventoryFinishedListener listener)
+    public void queryInventoryAsync(boolean b, List<String> identifiers, QueryInventoryFinishedListener listener)
         throws IabAsyncInProgressException{
         queryInventoryAsync(false, null, null, listener);
     }
