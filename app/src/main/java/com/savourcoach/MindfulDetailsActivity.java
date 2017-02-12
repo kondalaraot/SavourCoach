@@ -72,12 +72,17 @@ public class MindfulDetailsActivity extends AppCompatActivity implements View.On
     @Override
     protected void onPause() {
         super.onPause();
-        if(mPlayer!=null && mPlayer.isPlaying()){
+       /* if(mPlayer!=null && mPlayer.isPlaying()){
+            mBtnStartStop.setImageResource(R.drawable.ic_media_play);
+//                mCountDownTimer.cancel();
+            stopAudioFile();
+        }*/
+        /*if(mPlayer!=null && mPlayer.isPlaying()){
             mPlayer.stop();
         }else{
 //            mPlayer.stop();
 
-        }
+        }*/
     }
 
     @Override

@@ -8,6 +8,16 @@ public class MindfulMoment {
     private String prodID;
     private String prodDescr;
     private String prodPrice;
+    private boolean isPurchased;
+
+    public MindfulMoment() {
+    }
+
+    public MindfulMoment(String prodID, String prodDescr, String prodPrice) {
+        this.prodID = prodID;
+        this.prodDescr = prodDescr;
+        this.prodPrice = prodPrice;
+    }
 
     public String getProdID() {
         return prodID;
@@ -31,5 +41,13 @@ public class MindfulMoment {
 
     public void setProdPrice(String prodPrice) {
         this.prodPrice = prodPrice;
+    }
+
+    public boolean isPurchased() {
+        return isPurchased;
+    }
+
+    public void setPurchased(boolean purchased) {
+        isPurchased = purchased;
     }
 }

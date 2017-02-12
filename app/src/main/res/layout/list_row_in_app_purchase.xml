@@ -4,6 +4,7 @@
     android:layout_margin="8dp"
     android:layout_height="wrap_content">
     <TextView
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
         android:textSize="15sp"
         android:text="Savour coach"
         android:id="@+id/tv_prod_details"
@@ -19,6 +20,7 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        android:id="@+id/tv_buy_label"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:textColor="@color/colorPrimary"

@@ -2,6 +2,7 @@ package com.savourcoach;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,6 +19,7 @@ import com.savourcoach.util.IabBroadcastReceiver;
 import com.savourcoach.util.IabHelper;
 import com.savourcoach.util.IabResult;
 import com.savourcoach.util.Inventory;
+import com.savourcoach.util.Purchase;
 import com.savourcoach.util.SkuDetails;
 
 import org.json.JSONException;
@@ -44,10 +45,14 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
     static final String SKU_ITEM_SAVOUR_BREATHE ="savour_your_breathe";
     static final String SKU_ITEM_I_AM_OK ="i_am_ok";
     static final String SKU_ITEM_HUNGER_BODY_SCAN ="hunger_awareness_body_scan";
-    static final String SKU_ITEM_YOUR_LOCUS_OF_CONTROL ="your_locus_of_control?";
-    static final String SKU_ITEM_WHAT_IS_REALLY_EATING_YOU ="what_is_really_eating_you?";
+    static final String SKU_ITEM_YOUR_LOCUS_OF_CONTROL ="your_locus_of_control";
+    static final String SKU_ITEM_WHAT_IS_REALLY_EATING_YOU ="what_is_really_eating_you";
 
      ProgressDialog mProgressDialog;
+    List<MindfulMoment> mindfulMoments;
+    ListView listView;
+    MomentsAdapter mAdapter;
+    MindfulMoment selectedMindfulMoment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,10 +140,10 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
 
 
 
-        final ListView listView = (ListView) findViewById(R.id.lv_moments);
+        listView = (ListView) findViewById(R.id.lv_moments);
 
 
-        mArrayList = new ArrayList<String>();
+       /* mArrayList = new ArrayList<String>();
         mArrayList.add("Mindful eating");
         mArrayList.add("Savour your breathe");
         mArrayList.add("I am ok");
@@ -147,31 +152,10 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
         mArrayList.add("What is really eating you?");
         mArrayList.add("Bonus:Take a breath");
 
-       /* *//*ArrayList<String> skuList = new ArrayList<String> ();
-        skuList.add("premiumUpgrade");
-        skuList.add("gas");*//*
-        Bundle querySkus = new Bundle();
-        querySkus.putStringArrayList("ITEM_ID_LIST", mArrayList);
-
-        try {
-
-            if(mService !=null){
-                Bundle skuDetails = mService.getSkuDetails(3,
-                        getPackageName(), "inapp", querySkus);
-            }
-
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }catch (Exception e){
-            e.printStackTrace();
-        }*/
-
-
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+               ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, mArrayList);
 
-        listView.setAdapter(adapter);
+        listView.setAdapter(adapter);*/
 
         // ListView Item Click Listener
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -181,11 +165,17 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
                                     int position, long id) {
                 // ListView Clicked item index
                 int itemPosition     = position;
+                selectedMindfulMoment = mindfulMoments.get(position);
+                if(selectedMindfulMoment.isPurchased()){
+                    String  itemValue    = selectedMindfulMoment.getProdDescr();
+                    Intent intent = new Intent(MindfulMomeListActivity.this,MindfulDetailsActivity.class);
+                    intent.putExtra("SelectedItem",itemValue);
+                    startActivity(intent);
+                }else{
+                    alert("Do you want to purchase?");
+                }
                 // ListView Clicked item value
-                String  itemValue    = (String) listView.getItemAtPosition(position);
-                Intent intent = new Intent(MindfulMomeListActivity.this,MindfulDetailsActivity.class);
-                intent.putExtra("SelectedItem",itemValue);
-                startActivity(intent);
+
                 // Show Alert
 
             }
@@ -255,11 +245,88 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
     void alert(String message) {
         AlertDialog.Builder bld = new AlertDialog.Builder(this);
         bld.setMessage(message);
-        bld.setNeutralButton("OK", null);
+        bld.setPositiveButton("Buy", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                buyItem();
+            }
+        });
+        bld.setNeutralButton("Cancel", null);
         Log.d(TAG, "Showing alert dialog: " + message);
         bld.create().show();
     }
 
+    void showAlert(String message) {
+        AlertDialog.Builder bld = new AlertDialog.Builder(this);
+        bld.setMessage(message);
+        bld.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+//        bld.setNeutralButton("Cancel", null);
+        Log.d(TAG, "Showing alert dialog: " + message);
+        bld.create().show();
+    }
+
+    private void buyItem(){
+        try {
+            mHelper.launchPurchaseFlow(MindfulMomeListActivity.this, selectedMindfulMoment.getProdID(), 10001,
+                    mPurchaseFinishedListener, "bGoa+V7g/yqDXvKRqq+JTFn4uQZbPiQJo4pf9RzJ");
+        } catch (IabHelper.IabAsyncInProgressException e) {
+            e.printStackTrace();
+        }
+    }
+
+    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener
+            = new IabHelper.OnIabPurchaseFinishedListener() {
+        public void onIabPurchaseFinished(IabResult result, Purchase purchase)
+        {
+            if (result.isFailure()) {
+                Log.d(TAG, "Error purchasing: " + result);
+                return;
+            }
+            else if (purchase.getSku().equals(SKU_ITEM_MIND_FUL_EATING)) {
+                // consume the gas and update the UI
+                Log.d(TAG,"SKU_ITEM_MIND_FUL_EATING ");
+                updateUIOnPurchase(SKU_ITEM_MIND_FUL_EATING);
+            }
+            else if (purchase.getSku().equals(SKU_ITEM_SAVOUR_BREATHE)) {
+                Log.d(TAG,"SKU_ITEM_SAVOUR_BREATHE ");
+                updateUIOnPurchase(SKU_ITEM_SAVOUR_BREATHE);
+
+                // give user access to premium content and update the UI
+            }else if(purchase.getSku().equals(SKU_ITEM_I_AM_OK)){
+                Log.d(TAG,"SKU_ITEM_I_AM_OK ");
+                updateUIOnPurchase(SKU_ITEM_I_AM_OK);
+
+
+            }else if(purchase.getSku().equals(SKU_ITEM_WHAT_IS_REALLY_EATING_YOU)){
+                Log.d(TAG,"SKU_ITEM_WHAT_IS_REALLY_EATING_YOU ");
+                updateUIOnPurchase(SKU_ITEM_WHAT_IS_REALLY_EATING_YOU);
+
+            }else if(purchase.getSku().equals(SKU_ITEM_YOUR_LOCUS_OF_CONTROL)){
+                Log.d(TAG,"SKU_ITEM_YOUR_LOCUS_OF_CONTROL ");
+                updateUIOnPurchase(SKU_ITEM_YOUR_LOCUS_OF_CONTROL);
+
+            }else if(purchase.getSku().equals(SKU_ITEM_HUNGER_BODY_SCAN)){
+                Log.d(TAG,"SKU_ITEM_HUNGER_BODY_SCAN ");
+                updateUIOnPurchase(SKU_ITEM_HUNGER_BODY_SCAN);
+
+            }
+        }
+    };
+
+    private void updateUIOnPurchase(String prodID){
+        for (MindfulMoment mindfulMoment : mindfulMoments) {
+            if(mindfulMoment.getProdID().equalsIgnoreCase(SKU_ITEM_SAVOUR_BREATHE)){
+                mindfulMoment.setPurchased(true);
+                mAdapter.notifyDataSetChanged();
+            }
+
+        }
+    }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (resultCode == 1001) {
@@ -287,9 +354,11 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
             mProgressDialog.dismiss();
             if (result.isFailure()) {
                 Log.d(TAG,"getProducts failed");
+                showAlert("Getting In-App prodcuts failed");
 //                callback.failure(null);
             } else {
                 Log.d(TAG,"getProducts succeeded");
+                mindfulMoments = new ArrayList<MindfulMoment>();
                 SkuDetails skuDetails_mindful_eating = inventory.getSkuDetails(SKU_ITEM_MIND_FUL_EATING);
                 SkuDetails skuDetails_item_savour_breathe = inventory.getSkuDetails(SKU_ITEM_SAVOUR_BREATHE);
                 SkuDetails skuDetails_i_am_ok = inventory.getSkuDetails(SKU_ITEM_I_AM_OK);
@@ -303,8 +372,50 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
                     String descr = skuDetails_mindful_eating.getDescription();
                     String price = skuDetails_mindful_eating.getPrice();
                     Log.d(TAG,"Descr "+descr +"Price" + price);
+                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_MIND_FUL_EATING,descr,price));
                 }
 
+                if(skuDetails_item_savour_breathe !=null){
+                    String descr = skuDetails_item_savour_breathe.getDescription();
+                    String price = skuDetails_item_savour_breathe.getPrice();
+                    Log.d(TAG,"Descr "+descr +"Price" + price);
+                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_SAVOUR_BREATHE,descr,price));
+                }
+
+                if(skuDetails_i_am_ok !=null){
+                    String descr = skuDetails_i_am_ok.getDescription();
+                    String price = skuDetails_i_am_ok.getPrice();
+                    Log.d(TAG,"Descr "+descr +"Price" + price);
+                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_I_AM_OK,descr,price));
+                }
+
+                if(skuDetails_hunger_bodyScan !=null){
+                    String descr = skuDetails_hunger_bodyScan.getDescription();
+                    String price = skuDetails_hunger_bodyScan.getPrice();
+                    Log.d(TAG,"Descr "+descr +"Price" + price);
+                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_HUNGER_BODY_SCAN,descr,price));
+                }
+
+                if(skuDetails_locus_of_control !=null){
+                    String descr = skuDetails_locus_of_control.getDescription();
+                    String price = skuDetails_locus_of_control.getPrice();
+                    Log.d(TAG,"Descr "+descr +"Price" + price);
+                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_YOUR_LOCUS_OF_CONTROL,descr,price));
+                }
+
+                if(skuDetails_really_eating_you !=null){
+                    String descr = skuDetails_really_eating_you.getDescription();
+                    String price = skuDetails_really_eating_you.getPrice();
+                    Log.d(TAG,"Descr "+descr +"Price" + price);
+                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_WHAT_IS_REALLY_EATING_YOU,descr,price));
+                }
+                MindfulMoment freeProd = new MindfulMoment(SKU_ITEM_MIND_FUL_EATING,"Bonus:Take a breath","");
+                freeProd.setPurchased(true);
+                mindfulMoments.add(freeProd);
+
+
+                mAdapter = new MomentsAdapter(MindfulMomeListActivity.this,mindfulMoments);
+                listView.setAdapter(mAdapter);
 
 //                callback.success(inventory);
             }

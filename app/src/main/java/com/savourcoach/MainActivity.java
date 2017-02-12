@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView mTvlabel;
 
     PreferenceManager mPreferenceManager;
+    Handler mHandler;
+    boolean isAimationRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +41,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         zoomin = AnimationUtils.loadAnimation(this, R.anim.zoomin);
         zoomout = AnimationUtils.loadAnimation(this, R.anim.zoomout);
 
-
-
         zoomin.setAnimationListener(new ZoomInAnimationListener() );
-
-
         zoomout.setAnimationListener(new ZoomOutAnimationListener() );
-
     }
-
 
     private void findViews() {
         mImageView = (ImageView)findViewById( R.id.imageView );
@@ -74,44 +70,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // Handle clicks for mBtnStartStop
 //            if(mBtnStartStop.getText().toString().equalsIgnoreCase("Start")){
             //Animation has not started
-            if(!(zoomin.hasStarted() || zoomout.hasStarted())){
+//            if(!(zoomin.isInitialized() || zoomout.isInitialized())){
+            if(isAimationRunning){
 
-//                mBtnStartStop.setText("Stop");
-//                zoomin.start();
-//                zoomout.start();
-                mImageView.setAnimation(zoomout);
-                zoomout.setAnimationListener(new ZoomOutAnimationListener());
-                zoomin.setAnimationListener(new ZoomInAnimationListener());
-                mImageView.startAnimation(zoomout);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        // Show your dialog here
-                        zoomout.cancel();
-                        zoomin.cancel();
-                        zoomout.setAnimationListener(null);
-                        zoomin.setAnimationListener(null);
-//                mImageView.getAnimation().setAnimationListener(null);
-                        mImageView.clearAnimation();
-                        showAlert();
-                    }
-                }, 1000 * 60 * mPreferenceManager.getBreatheDuration());
-//                mImageView.setAnimation(zoomin);
-
-            }else{
 //                mBtnStartStop.setText("Start");
                 /*zoomout.cancel();
                 zoomin.cancel();*/
-//                mTvlabel.setText("");
+                mTvlabel.setText("");
+
                 zoomout.cancel();
                 zoomin.cancel();
                 zoomout.setAnimationListener(null);
                 zoomin.setAnimationListener(null);
 //                mImageView.getAnimation().setAnimationListener(null);
                 mImageView.clearAnimation();
+                isAimationRunning = false;
 //                zoomout.cancel();
 
+//
+
+            }else{
+//
+//                mBtnStartStop.setText("Stop");
+//                zoomin.start();
+//                zoomout.start();
+                mImageView.setAnimation(zoomin);
+                zoomin.setAnimationListener(new ZoomInAnimationListener());
+                zoomout.setAnimationListener(new ZoomOutAnimationListener());
+
+                mImageView.startAnimation(zoomin);
+                isAimationRunning = true;
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        // Show your dialog here
+                        zoomin.cancel();
+                        zoomout.cancel();
+
+                        zoomin.setAnimationListener(null);
+                        zoomout.setAnimationListener(null);
+
+//                mImageView.getAnimation().setAnimationListener(null);
+                        mImageView.clearAnimation();
+                        showAlert();
+                    }
+                }, 1000 * 60 * mPreferenceManager.getBreatheDuration());
+//                mImageView.setAnimation(zoomin);
             }
 
         } else if ( v == mBtnSettings ) {
@@ -125,23 +131,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showAlert() {
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                this);
+        if(isAimationRunning){
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    this);
 
-        // set title
-        alertDialogBuilder.setTitle("Savour Coach");
+            // set title
+            alertDialogBuilder.setTitle("Savour Coach");
 
-        // set dialog message
-        alertDialogBuilder
-                .setMessage("Time over!")
-                .setCancelable(false)
-                .setPositiveButton("OK",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
-                        // if this button is clicked, close
-                        // current activity
-                        dialog.dismiss();
-                    }
-                });
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage("Time over!")
+                    .setCancelable(false)
+                    .setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+                            // if this button is clicked, close
+                            // current activity
+                            dialog.dismiss();
+                        }
+                    });
               /* *//* .setNegativeButton("No",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
                         // if this button is clicked, just close
@@ -150,11 +157,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }*//*
                 });*/
 
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
 
-        // show it
-        alertDialog.show();
+            // show it
+            alertDialog.show();
+        }
+
 
     }
 
@@ -223,4 +232,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @Override
+    protected void onStop() {
+
+        zoomout.cancel();
+        zoomin.cancel();
+        zoomout.setAnimationListener(null);
+        zoomin.setAnimationListener(null);
+//                mImageView.getAnimation().setAnimationListener(null);
+        mImageView.clearAnimation();
+        isAimationRunning = false;
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+
+    }
 }

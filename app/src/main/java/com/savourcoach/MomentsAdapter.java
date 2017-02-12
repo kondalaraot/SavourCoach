@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Kondal on 2/8/2017.
@@ -18,16 +18,17 @@ public class MomentsAdapter extends ArrayAdapter<MindfulMoment> {
     private static class ViewHolder {
         TextView name;
         TextView price;
+        public TextView priceLabel;
     }
 
-    public MomentsAdapter(Context context, ArrayList<MindfulMoment> users) {
+    public MomentsAdapter(Context context, List<MindfulMoment> users) {
         super(context, R.layout.list_row_in_app_purchase, users);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        MindfulMoment user = getItem(position);
+        MindfulMoment mindfulMoment = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
         if (convertView == null) {
@@ -37,6 +38,7 @@ public class MomentsAdapter extends ArrayAdapter<MindfulMoment> {
             convertView = inflater.inflate(R.layout.list_row_in_app_purchase, parent, false);
             viewHolder.name = (TextView) convertView.findViewById(R.id.tv_prod_details);
             viewHolder.price = (TextView) convertView.findViewById(R.id.tv_price);
+            viewHolder.priceLabel = (TextView) convertView.findViewById(R.id.tv_buy_label);
             // Cache the viewHolder object inside the fresh view
             convertView.setTag(viewHolder);
         } else {
@@ -45,8 +47,18 @@ public class MomentsAdapter extends ArrayAdapter<MindfulMoment> {
         }
         // Populate the data from the data object via the viewHolder object
         // into the template view.
-        viewHolder.name.setText(user.getProdDescr());
-        viewHolder.price.setText(user.getProdPrice());
+        viewHolder.name.setText(mindfulMoment.getProdDescr());
+//        viewHolder.priceLabel.setText(mindfulMoment.getProdPrice());
+        viewHolder.price.setText(mindfulMoment.getProdPrice());
+
+        if(mindfulMoment.isPurchased()){
+            viewHolder.price.setText("");
+            viewHolder.priceLabel.setVisibility(View.GONE);
+        }else {
+            viewHolder.price.setText(mindfulMoment.getProdPrice());
+            viewHolder.priceLabel.setVisibility(View.VISIBLE);
+
+        }
         // Return the completed view to render on screen
         return convertView;
     }
