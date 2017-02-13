@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     PreferenceManager mPreferenceManager;
     Handler mHandler;
+    Runnable runnable;
     boolean isAimationRunning;
 
     @Override
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mImageView.clearAnimation();
                 isAimationRunning = false;
 //                zoomout.cancel();
-
+                mHandler.removeCallbacks(runnable);
 //
 
             }else{
@@ -100,12 +101,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 mImageView.startAnimation(zoomin);
                 isAimationRunning = true;
-
-                new Handler().postDelayed(new Runnable() {
+                mHandler = new Handler();
+                runnable = new Runnable() {
                     @Override
                     public void run() {
                         // TODO Auto-generated method stub
                         // Show your dialog here
+
                         zoomin.cancel();
                         zoomout.cancel();
 
@@ -116,8 +118,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         mImageView.clearAnimation();
                         showAlert();
                     }
-                }, 1000 * 60 * mPreferenceManager.getBreatheDuration());
-//                mImageView.setAnimation(zoomin);
+                };
+                mHandler.postDelayed(runnable, 1000 * 60 * mPreferenceManager.getBreatheDuration());
             }
 
         } else if ( v == mBtnSettings ) {

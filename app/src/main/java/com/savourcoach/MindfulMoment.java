@@ -13,10 +13,11 @@ public class MindfulMoment {
     public MindfulMoment() {
     }
 
-    public MindfulMoment(String prodID, String prodDescr, String prodPrice) {
+    public MindfulMoment(String prodID, String prodDescr, String prodPrice,boolean isPurchased) {
         this.prodID = prodID;
         this.prodDescr = prodDescr;
         this.prodPrice = prodPrice;
+        this.isPurchased = isPurchased;
     }
 
     public String getProdID() {

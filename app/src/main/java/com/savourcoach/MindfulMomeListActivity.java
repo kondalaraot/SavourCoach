@@ -336,9 +336,11 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
                 System.out.println("re ssuut ood");
                 try{
                     JSONObject jo = new  JSONObject(purchaseData);
-                    String sku = jo.getString("");
+//                    String sku = jo.getString("");
+                    //Purchased Product ID
+                    String sku = jo.getString(selectedMindfulMoment.getProdID());
                     Toast.makeText(MindfulMomeListActivity.this,
-                            "u have bo ught"+ sku,
+                            "u have bought"+ sku,
                             Toast.LENGTH_LONG).show();
                 }
                 catch(JSONException e){
@@ -354,7 +356,10 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
             mProgressDialog.dismiss();
             if (result.isFailure()) {
                 Log.d(TAG,"getProducts failed");
-                showAlert("Getting In-App prodcuts failed");
+                showAlert("Getting In-App products failed");
+                MindfulMoment freeProd = new MindfulMoment(SKU_ITEM_MIND_FUL_EATING,"Bonus:Take a breath","",true);
+                freeProd.setPurchased(true);
+                mindfulMoments.add(freeProd);
 //                callback.failure(null);
             } else {
                 Log.d(TAG,"getProducts succeeded");
@@ -372,44 +377,94 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
                     String descr = skuDetails_mindful_eating.getDescription();
                     String price = skuDetails_mindful_eating.getPrice();
                     Log.d(TAG,"Descr "+descr +"Price" + price);
-                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_MIND_FUL_EATING,descr,price));
+
+                    Purchase purchase = inventory.getPurchase(SKU_ITEM_MIND_FUL_EATING);
+                    boolean isPurchased;
+                    if(purchase !=null){
+                        // Purchased
+                        isPurchased = true;
+                    }else{
+                        isPurchased = false;
+                    }
+
+                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_MIND_FUL_EATING,descr,price,isPurchased));
                 }
 
                 if(skuDetails_item_savour_breathe !=null){
                     String descr = skuDetails_item_savour_breathe.getDescription();
                     String price = skuDetails_item_savour_breathe.getPrice();
                     Log.d(TAG,"Descr "+descr +"Price" + price);
-                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_SAVOUR_BREATHE,descr,price));
+                    Purchase purchase = inventory.getPurchase(SKU_ITEM_MIND_FUL_EATING);
+                    boolean isPurchased;
+                    if(purchase !=null){
+                        // Purchased
+                        isPurchased = true;
+                    }else{
+                        isPurchased = false;
+                    }
+                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_SAVOUR_BREATHE,descr,price,isPurchased));
                 }
 
                 if(skuDetails_i_am_ok !=null){
                     String descr = skuDetails_i_am_ok.getDescription();
                     String price = skuDetails_i_am_ok.getPrice();
                     Log.d(TAG,"Descr "+descr +"Price" + price);
-                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_I_AM_OK,descr,price));
+                    Purchase purchase = inventory.getPurchase(SKU_ITEM_MIND_FUL_EATING);
+                    boolean isPurchased;
+                    if(purchase !=null){
+                        // Purchased
+                        isPurchased = true;
+                    }else{
+                        isPurchased = false;
+                    }
+                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_I_AM_OK,descr,price,isPurchased));
                 }
 
                 if(skuDetails_hunger_bodyScan !=null){
                     String descr = skuDetails_hunger_bodyScan.getDescription();
                     String price = skuDetails_hunger_bodyScan.getPrice();
                     Log.d(TAG,"Descr "+descr +"Price" + price);
-                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_HUNGER_BODY_SCAN,descr,price));
+                    Purchase purchase = inventory.getPurchase(SKU_ITEM_MIND_FUL_EATING);
+                    boolean isPurchased;
+                    if(purchase !=null){
+                        // Purchased
+                        isPurchased = true;
+                    }else{
+                        isPurchased = false;
+                    }
+                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_HUNGER_BODY_SCAN,descr,price,isPurchased));
                 }
 
                 if(skuDetails_locus_of_control !=null){
                     String descr = skuDetails_locus_of_control.getDescription();
                     String price = skuDetails_locus_of_control.getPrice();
                     Log.d(TAG,"Descr "+descr +"Price" + price);
-                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_YOUR_LOCUS_OF_CONTROL,descr,price));
+                    Purchase purchase = inventory.getPurchase(SKU_ITEM_MIND_FUL_EATING);
+                    boolean isPurchased;
+                    if(purchase !=null){
+                        // Purchased
+                        isPurchased = true;
+                    }else{
+                        isPurchased = false;
+                    }
+                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_YOUR_LOCUS_OF_CONTROL,descr,price,isPurchased));
                 }
 
                 if(skuDetails_really_eating_you !=null){
                     String descr = skuDetails_really_eating_you.getDescription();
                     String price = skuDetails_really_eating_you.getPrice();
                     Log.d(TAG,"Descr "+descr +"Price" + price);
-                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_WHAT_IS_REALLY_EATING_YOU,descr,price));
+                    Purchase purchase = inventory.getPurchase(SKU_ITEM_MIND_FUL_EATING);
+                    boolean isPurchased;
+                    if(purchase !=null){
+                        // Purchased
+                        isPurchased = true;
+                    }else{
+                        isPurchased = false;
+                    }
+                    mindfulMoments.add(new MindfulMoment(SKU_ITEM_WHAT_IS_REALLY_EATING_YOU,descr,price,isPurchased));
                 }
-                MindfulMoment freeProd = new MindfulMoment(SKU_ITEM_MIND_FUL_EATING,"Bonus:Take a breath","");
+                MindfulMoment freeProd = new MindfulMoment(SKU_ITEM_MIND_FUL_EATING,"Bonus:Take a breath","",true);
                 freeProd.setPurchased(true);
                 mindfulMoments.add(freeProd);
 
