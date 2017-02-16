@@ -285,6 +285,7 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
         {
             if (result.isFailure()) {
                 Log.d(TAG, "Error purchasing: " + result);
+                showAlert("Error Purchase..");
                 return;
             }
             else if (purchase.getSku().equals(SKU_ITEM_MIND_FUL_EATING)) {
@@ -359,6 +360,9 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
                 showAlert("Getting In-App products failed");
                 MindfulMoment freeProd = new MindfulMoment(SKU_ITEM_MIND_FUL_EATING,"Bonus:Take a breath","",true);
                 freeProd.setPurchased(true);
+                if(mindfulMoments == null){
+                    mindfulMoments = new ArrayList<MindfulMoment>();
+                }
                 mindfulMoments.add(freeProd);
 //                callback.failure(null);
             } else {
@@ -394,7 +398,7 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
                     String descr = skuDetails_item_savour_breathe.getDescription();
                     String price = skuDetails_item_savour_breathe.getPrice();
                     Log.d(TAG,"Descr "+descr +"Price" + price);
-                    Purchase purchase = inventory.getPurchase(SKU_ITEM_MIND_FUL_EATING);
+                    Purchase purchase = inventory.getPurchase(SKU_ITEM_SAVOUR_BREATHE);
                     boolean isPurchased;
                     if(purchase !=null){
                         // Purchased
@@ -409,7 +413,7 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
                     String descr = skuDetails_i_am_ok.getDescription();
                     String price = skuDetails_i_am_ok.getPrice();
                     Log.d(TAG,"Descr "+descr +"Price" + price);
-                    Purchase purchase = inventory.getPurchase(SKU_ITEM_MIND_FUL_EATING);
+                    Purchase purchase = inventory.getPurchase(SKU_ITEM_I_AM_OK);
                     boolean isPurchased;
                     if(purchase !=null){
                         // Purchased
@@ -424,7 +428,7 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
                     String descr = skuDetails_hunger_bodyScan.getDescription();
                     String price = skuDetails_hunger_bodyScan.getPrice();
                     Log.d(TAG,"Descr "+descr +"Price" + price);
-                    Purchase purchase = inventory.getPurchase(SKU_ITEM_MIND_FUL_EATING);
+                    Purchase purchase = inventory.getPurchase(SKU_ITEM_HUNGER_BODY_SCAN);
                     boolean isPurchased;
                     if(purchase !=null){
                         // Purchased
@@ -439,7 +443,7 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
                     String descr = skuDetails_locus_of_control.getDescription();
                     String price = skuDetails_locus_of_control.getPrice();
                     Log.d(TAG,"Descr "+descr +"Price" + price);
-                    Purchase purchase = inventory.getPurchase(SKU_ITEM_MIND_FUL_EATING);
+                    Purchase purchase = inventory.getPurchase(SKU_ITEM_YOUR_LOCUS_OF_CONTROL);
                     boolean isPurchased;
                     if(purchase !=null){
                         // Purchased
@@ -454,7 +458,7 @@ public class MindfulMomeListActivity extends AppCompatActivity  {
                     String descr = skuDetails_really_eating_you.getDescription();
                     String price = skuDetails_really_eating_you.getPrice();
                     Log.d(TAG,"Descr "+descr +"Price" + price);
-                    Purchase purchase = inventory.getPurchase(SKU_ITEM_MIND_FUL_EATING);
+                    Purchase purchase = inventory.getPurchase(SKU_ITEM_WHAT_IS_REALLY_EATING_YOU);
                     boolean isPurchased;
                     if(purchase !=null){
                         // Purchased

@@ -2,22 +2,32 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_margin="8dp"
+    android:minHeight="50dp"
     android:layout_height="wrap_content">
-    <TextView
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-        android:textSize="15sp"
-        android:text="Savour coach"
-        android:id="@+id/tv_prod_details"
+    <LinearLayout
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
+        android:layout_height="wrap_content">
 
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/tv_prod_details"
-        android:text="$ 550"
-        android:id="@+id/tv_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+            android:textSize="16sp"
+            android:text="Savour coach"
+            android:id="@+id/tv_prod_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+
+            android:paddingTop="5dp"
+            android:layout_below="@+id/tv_prod_details"
+            android:text="$ 550"
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/tv_buy_label"

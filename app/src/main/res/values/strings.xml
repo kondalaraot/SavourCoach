@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SavourCoach</string>
+    <string name="app_name">The Savour Coach</string>
     <string name="settings">Settings</string>
     <string name="title_mindful_monents">The Mindful Moments</string>
 
@@ -58,5 +58,29 @@ Use of this application should be designated to times when you are not engaged i
         <item>Your locus of control</item>
         <item>What\'s really eating you?</item>
         <item>Take a breath.</item>
+    </string-array>
+
+    <string-array name="notification_messages">
+        <item>I enjoy all kinds of food without guilt</item>
+        <item>I eat slowly and mindfully</item>
+        <item>If I am hungry eat, if thirsty I drink, if stressed I talk to someone, if bored I do something I enjoy</item>
+        <item>My good health is my reward for the nourishing foods I eat</item>
+        <item>I ignore false messages of hunger and eat only when necessary</item>
+        <item>Finding new ways to eat healthy is empowering and puts me in control</item>
+        <item>I feel better when I eat better</item>
+        <item>I savour each bite that I eat today</item>
+        <item>Cooking healthy meals is an act of love to myself and those I cook for</item>
+        <item>I am aware of what I eat, how I eat and when I eat</item>
+        <item>Eating and emotional comfort are separate</item>
+        <item>I eat to live, not live to eat</item>
+        <item>The healthier I eat the better I feel</item>d
+        <item>Today I will listen to my body and eat for nourishment</item>d
+        <item>With each bite, I feel more energised</item>d
+        <item>I\'m free from old patterns and habits that involved food</item>
+        <item>I stop eating when I\'m comfortably sated</item>
+        <item>I\'m making compassionate choices toward myself everyday</item>
+        <item>I\'m listening to my body and allowing it to guide my food awareness today</item>
+        <item>Today I will observe the tastes and textures of my food</item>
+        <item>Today I will give thanks and appreciate my food</item>
     </string-array>
 </resources>

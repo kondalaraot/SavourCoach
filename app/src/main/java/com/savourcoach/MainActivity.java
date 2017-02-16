@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 //                mImageView.getAnimation().setAnimationListener(null);
                         mImageView.clearAnimation();
+                        mTvlabel.setText("");
                         showAlert();
                     }
                 };

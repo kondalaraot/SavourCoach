@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
+import java.util.Random;
 
 public class SettingsActivity extends AppCompatActivity implements OnCompleteListener, SeekBar.OnSeekBarChangeListener,View.OnClickListener {
 
@@ -84,8 +85,12 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
             mSwitchCompat.setChecked(false);
 
         }
+        String[] remTime =  mPreferenceManager.getReminderTime().split(":");
+        int hour = Integer.parseInt(remTime[0]);
+        int min = Integer.parseInt(remTime[1]);
+        convertIntoAMPM(hour,min);
 
-        mTvTime.setText(mPreferenceManager.getReminderTime());
+//        mTvTime.setText(mPreferenceManager.getReminderTime());
 
         mSeekBarDuration.setMax(Constans.BREATHE_SEEK_MAX);
         mSeekBarDuration.setProgress(mPreferenceManager.getBreatheDuration());
@@ -156,7 +161,10 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
     private void setAlarmReminder(int hour, int min){
         String time = String.valueOf(hour) + ":" + String.valueOf(min);
         mPreferenceManager.setReminderTime(time);
-        mTvTime.setText(time);
+
+        convertIntoAMPM(hour,min);
+
+//        mTvTime.setText(time);
         Calendar calNow = Calendar.getInstance();
         Calendar calSet = (Calendar) calNow.clone();
 
@@ -169,7 +177,34 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
             //Today Set time passed, count to tomorrow
             calSet.add(Calendar.DATE, 1);
         }*/
-        scheduleNotification(getNotification("I eat slowly and mindfully"), calSet);
+        String[] notificationMessages = getResources().getStringArray(R.array.notification_messages);
+
+//        getResources().getStringArray(getResources().getStringArray(R.array.notification_messages))
+        int randNo = randInt(0,notificationMessages.length-1);
+         notificationMessages.clone();
+        scheduleNotification(getNotification(notificationMessages[randNo]), calSet);
+    }
+
+    public int randInt(int min, int max) {
+
+        // NOTE: This will (intentionally) not run as written so that folks
+        // copy-pasting have to think about how to initialize their
+        // Random instance.  Initialization of the Random instance is outside
+        // the main scope of the question, but some decent options are to have
+        // a field that is initialized once and then re-used as needed or to
+        // use ThreadLocalRandom (if using at least Java 1.7).
+        Random rand = new Random();
+
+        // nextInt is normally exclusive of the top value,
+        // so add 1 to make it inclusive
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+
+        return randomNum;
+    }
+    private void convertIntoAMPM(int hour,int min){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(0, 0, 0, hour, min);
+        mTvTime.setText((String) DateFormat.format("hh:mm aaa", calendar));
     }
 
     private void scheduleNotification(Notification notification, Calendar calendar) {
@@ -182,28 +217,21 @@ public class SettingsActivity extends AppCompatActivity implements OnCompleteLis
 
 //            long futureInMillis = SystemClock.elapsedRealtime() + delay;
         alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-//        alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
 
-       /* alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_DAY,
-                AlarmManager.INTERVAL_DAY, pendingIntent);*/
-
-        // With setInexactRepeating(), you have to use one of the AlarmManager interval
-// constants--in this case, AlarmManager.INTERVAL_DAY.
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
-    private Notification getNotification(String content) {
-        Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        private Notification getNotification(String content) {
+            Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setContentTitle(getString(R.string.app_name));
-        builder.setContentText(content);
-        builder.setSmallIcon(R.mipmap.ic_launcher);
-        builder.setSound(soundUri);
-        return builder.build();
-    }
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+            builder.setContentTitle(getString(R.string.app_name));
+            builder.setContentText(content);
+            builder.setSmallIcon(R.mipmap.ic_launcher);
+            builder.setSound(soundUri);
+            return builder.build();
+        }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {

@@ -53,8 +53,10 @@ public class MomentsAdapter extends ArrayAdapter<MindfulMoment> {
 
         if(mindfulMoment.isPurchased()){
             viewHolder.price.setText("");
+            viewHolder.price.setVisibility(View.GONE);
             viewHolder.priceLabel.setVisibility(View.GONE);
         }else {
+            viewHolder.price.setVisibility(View.VISIBLE);
             viewHolder.price.setText(mindfulMoment.getProdPrice());
             viewHolder.priceLabel.setVisibility(View.VISIBLE);
 
